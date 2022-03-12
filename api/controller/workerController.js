@@ -116,5 +116,5 @@ const getWorker = async(req, res, next) =>{
  */
 
 module.exports = {
-    createWorker: createWorker, getWorker
+    createWorker: createWorker, getWorker, updateWorker, deleteWorker
 }
