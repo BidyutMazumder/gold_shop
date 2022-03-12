@@ -1,4 +1,5 @@
 const Mongoose = require("mongoose");
+const {string} = require("joi");
 const ownerSchema = new Mongoose.Schema({
     ownerName:{
         type:String,
@@ -13,6 +14,10 @@ const ownerSchema = new Mongoose.Schema({
         require:true
     },
     ownerAddress:{
+        type:String,
+        require:true
+    },
+    pass:{
         type:String,
         require:true
     }

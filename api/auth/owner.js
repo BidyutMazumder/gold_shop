@@ -1,12 +1,11 @@
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 const ERROR_LIST = require("../helpers/errorList");
 const ERROR_MESSAGE = require("../helpers/errorMessage");
 const ResponseStatus = require("../helpers/responseStatus");
 const Validator = require('validatorjs');
-const User = require("../models/user");
-
-const userLogin = async (req, res, next) =>{
+const Owner = require("../models/owner")
+const ownerLogin = async (req, res, next) => {
     try{
         const { email, password } = req.body;
         const validate = new Validator(req.body, {
@@ -18,7 +17,7 @@ const userLogin = async (req, res, next) =>{
                 .status(ERROR_LIST.HTTP_UNPROCESSABLE_ENTITY)
                 .send(ResponseStatus.failure(ERROR_MESSAGE.HTTP_UNPROCESSABLE_ENTITY, validate.errors.errors));
         }
-        const account = await User.findOne({
+        const account = await Owner.findOne({
             email:req.body.email,
         });
         if(!account){
@@ -34,18 +33,16 @@ const userLogin = async (req, res, next) =>{
                 .send(ResponseStatus.failure(ERROR_MESSAGE.HTTP_UNAUTHORIZED, {}));
         }
         const token = await jwt.sign({
-            name: account.name,
-            mobile: account.mobile,
-            email: account.email,
-            age: account.age,
-            address: account.address
+            ownerName: account.ownerName,
+            ownerNationalId: account.ownerNationalId,
+            ownerTin: account.ownerTin,
+            ownerAddress: account.ownerAddress
         }, process.env.JWT_SECRET, { expiresIn: '50000d' });
         return res
             .status(ERROR_LIST.HTTP_OK)
             .send(ResponseStatus.success(ERROR_MESSAGE.HTTP_OK, token));
-    }catch(err){
+    }catch (err) {
         if(err) next(err);
     }
 }
-
-module.exports = userLogin();
+module.exports = ownerLogin();
